@@ -1,53 +1,73 @@
 package com.cfox.commentdemo;
 
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText mCommentContentEt;
-    private Button mBtnSubmitComment;
+    private Button mBtnSubmitComment,mBtnOpen;
+
+    private LinearLayout mCommentLayout;
+    private RelativeLayout mRelativeWrap;
+
+    private int maxSize = 0;
+    private int minSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         initView();
+
     }
 
     private void initView() {
+
+        mCommentLayout = (LinearLayout) findViewById(R.id.comm_bottom_ll);
+        mRelativeWrap = (RelativeLayout) findViewById(R.id.comm_wrap_ll);
+
         mCommentContentEt = (EditText) findViewById(R.id.comment_content);
-        mCommentContentEt.setOnFocusChangeListener(new CommentEt());
-        mCommentContentEt.setFocusable(false);
         mCommentContentEt.setOnClickListener(this);
 
         mBtnSubmitComment = (Button) findViewById(R.id.btn_submit_commemt);
         mBtnSubmitComment.setOnClickListener(this);
-    }
 
-    private class CommentEt implements View.OnFocusChangeListener{
+        mBtnOpen = (Button) findViewById(R.id.btn_open_comm);
+        mBtnOpen.setOnClickListener(this);
 
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
+        mRelativeWrap.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                mRelativeWrap.getWindowVisibleDisplayFrame(rect);
 
-            if(hasFocus){
-                mBtnSubmitComment.setVisibility(View.VISIBLE);
-                mCommentContentEt.setGravity(Gravity.LEFT);
-                v.setClickable(false);
-            }else {
-                mCommentContentEt.setGravity(Gravity.CENTER);
-                mBtnSubmitComment.setVisibility(View.GONE);
-                v.setClickable(true);
+                if (maxSize > rect.height()) {
+                    minSize = rect.height();
+                } else {
+                    maxSize = rect.height();
+                }
+
+                if (maxSize == rect.height()) {//收起
+                    mCommentLayout.setVisibility(View.GONE);
+                    mBtnOpen.setVisibility(View.VISIBLE);
+                }
+
+                if (minSize == rect.height()) {//弹起
+                    mBtnOpen.setVisibility(View.GONE);
+                    mCommentLayout.setVisibility(View.VISIBLE);
+                }
             }
+        });
 
-        }
     }
 
     @Override
@@ -58,7 +78,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
                 hideInputMethod(v);
                 mCommentContentEt.setText("");
-                mCommentContentEt.setFocusable(false);
                 mCommentContentEt.clearFocus();
 
             }
@@ -94,16 +113,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.comment_content:
+            case R.id.btn_submit_commemt:
+                Toast.makeText(this,"提交评论",Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.btn_open_comm:
                 mCommentContentEt.setFocusable(true);
                 mCommentContentEt.setFocusableInTouchMode(true);
                 mCommentContentEt.requestFocus();
                 mCommentContentEt.findFocus();
-                showInputMethod(v);
-                break;
-
-            case R.id.btn_submit_commemt:
-                Toast.makeText(this,"提交评论",Toast.LENGTH_SHORT).show();
+                showInputMethod(mCommentContentEt);
                 break;
         }
     }

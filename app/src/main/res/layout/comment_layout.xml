@@ -1,39 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comm_wrap_ll"
     android:layout_alignParentBottom="true"
     android:background="#F2F2F2"
     android:gravity="center"
-    android:id="@+id/comm_bottom_ll"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
 
-
-    <EditText
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:paddingLeft="8dp"
-        android:focusable="false"
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/comm_bottom_ll"
+        android:background="#F2F2F2"
         android:gravity="center"
-        android:hint="评论"
-        android:background="@android:color/transparent"
-        android:id="@+id/comment_content"
-        android:layout_weight="10"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"/>
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="8dp"
+            android:gravity="left"
+            android:hint="评论"
+            android:background="@drawable/search_background"
+            android:id="@+id/comment_content"
+            android:layout_weight="10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_gray"
+            android:gravity="center"
+            android:id="@+id/btn_submit_commemt"
+            android:text="评论"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="50dp" />
+
+    </LinearLayout>
+
 
     <Button
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/button_gray"
-        android:gravity="center"
-        android:visibility="gone"
-        android:id="@+id/btn_submit_commemt"
+        android:background="@color/colorAccent"
+        android:id="@+id/btn_open_comm"
         android:text="评论"
-        android:layout_weight="4"
-        android:layout_width="0dp"
-        android:layout_height="40dp" />
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
 
-</LinearLayout>
+</RelativeLayout>
